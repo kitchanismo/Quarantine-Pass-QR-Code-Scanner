@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/homeliner.dart';
-import 'package:qr_checker/repositories/homeliner_repository.dart';
+import 'package:qr_checker/services/homeliner_service.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,7 +9,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final homeLiners = HomeLinerRepository().homeLiners;
+  final homeLiners = HomeLinerService().homeLiners;
 
   @override
   Widget build(BuildContext context) {
