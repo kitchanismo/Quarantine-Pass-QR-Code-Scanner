@@ -1,42 +1,47 @@
 import 'package:flutter/material.dart';
 
-class MyButton extends StatelessWidget {
+class MyButton extends StatefulWidget {
   MyButton(
-      {this.text,
+      {@required this.child,
+      this.text,
       this.onPressed,
-      this.color = Colors.pinkAccent,
+      this.borderColor = Colors.pinkAccent,
       this.isOutline = false});
-
+  final Widget child;
   final isOutline;
   final onPressed;
-  final color;
+  final borderColor;
   final text;
 
+  @override
+  _MyButtonState createState() => _MyButtonState();
+}
+
+class _MyButtonState extends State<MyButton> {
   final padding = EdgeInsets.symmetric(vertical: 15, horizontal: 0);
 
   @override
   Widget build(BuildContext context) {
-    if (isOutline) {
+    if (widget.isOutline) {
       return OutlineButton(
-          onPressed: onPressed,
-          color: color,
-          borderSide: BorderSide(color: color),
+          onPressed: widget.onPressed,
+          color: widget.borderColor,
+          borderSide: BorderSide(color: widget.borderColor),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
             padding: padding,
-            child: Text(text, style: TextStyle(color: color, fontSize: 20)),
+            child: widget.child,
           ));
     }
 
     return FlatButton(
-        onPressed: onPressed,
-        color: color,
+        onPressed: widget.onPressed,
+        color: widget.borderColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: padding,
-          child:
-              Text(text, style: TextStyle(color: Colors.white, fontSize: 20)),
+          child: widget.child,
         ));
   }
 }

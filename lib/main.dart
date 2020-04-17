@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:qr_checker/screens/about.dart';
+import 'package:qr_checker/screens/add.dart';
+import 'package:qr_checker/screens/found_code.dart';
 import 'package:qr_checker/screens/home.dart';
+import 'package:qr_checker/screens/scanner.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,6 +20,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => Home(),
+        '/add': (context) => AddForm(),
+        '/foundCode': (context) => FoundCode(),
+        '/scanner': (context) => Scanner(title: 'Scanner'),
         '/about': (context) => About(title: 'Flutter Demo About Page'),
       },
     );
