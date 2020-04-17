@@ -17,7 +17,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
- 
     return Stack(
       children: <Widget>[
         Image.asset(
@@ -27,7 +26,7 @@ class _HomeState extends State<Home> {
           fit: BoxFit.cover,
         ),
         Scaffold(
-          backgroundColor: Color.fromRGBO(0, 128, 128, 0.8),
+          backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             actions: <Widget>[
