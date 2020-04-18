@@ -18,12 +18,14 @@ class _ScannerState extends State<Scanner> {
 
   @override
   void initState() {
+    this.controller?.resumeCamera();
     super.initState();
   }
 
   void foundCode(String scanData) {
     setState(() {
       print("QRCode: $scanData");
+      qrText = scanData;
     });
     controller.pauseCamera();
     Navigator.pushReplacementNamed(context, '/foundCode',
@@ -36,14 +38,15 @@ class _ScannerState extends State<Scanner> {
         backgroundColor: Colors.teal,
         body: QRView(
           key: qrKey,
+          switchButtonColor: Colors.pinkAccent,
           overlay: QrScannerOverlayShape(
               borderRadius: 16,
-              borderColor: Colors.white,
+              borderColor: Colors.teal,
               borderLength: 120,
-              borderWidth: 10,
+              borderWidth: 5,
               cutOutSize: 250),
           onQRViewCreated: _onQRViewCreate,
-          data: "QR TEXT",
+          data: qrText,
         ));
   }
 

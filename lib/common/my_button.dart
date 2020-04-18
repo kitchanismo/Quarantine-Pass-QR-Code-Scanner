@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 class MyButton extends StatefulWidget {
   MyButton(
       {@required this.child,
-      this.text,
       this.onPressed,
       this.borderColor = Colors.pinkAccent,
       this.isOutline = false});
   final Widget child;
-  final isOutline;
-  final onPressed;
-  final borderColor;
-  final text;
+  final bool isOutline;
+  final Function onPressed;
+  final Color borderColor;
 
   @override
   _MyButtonState createState() => _MyButtonState();

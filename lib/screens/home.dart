@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_checker/common/my_button.dart';
-import 'package:qr_checker/models/homeliner.dart';
-import 'package:qr_checker/services/homeliner_service.dart';
+import 'package:qr_checker/models/passer.dart';
+import 'package:qr_checker/services/passer_service.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
 
@@ -11,9 +11,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<HomeLiner> homeLiners;
+  List<Passer> passers;
+  bool isRecent = true;
 
-  void initState() => homeLiners = HomeLinerService().homeLiners;
+  @override
+  void initState() {
+    passers = HomeLinerService().passers;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +33,10 @@ class _HomeState extends State<Home> {
         Scaffold(
           backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
           appBar: AppBar(
+            leading: Icon(
+              Icons.person,
+              size: 30,
+            ),
             backgroundColor: Colors.transparent,
             actions: <Widget>[
               Padding(
@@ -39,12 +48,9 @@ class _HomeState extends State<Home> {
               )
             ],
             title: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 30),
-                child: Text(
-                  'QUARANTINE CHECKER',
-                  style: TextStyle(fontSize: 25),
-                ),
+              child: Text(
+                'QR SCANNER',
+                style: TextStyle(fontSize: 25),
               ),
             ),
             elevation: 0,
@@ -59,16 +65,25 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/add');
-            },
-            child: Icon(Icons.add),
-            backgroundColor: Colors.pinkAccent,
-          ),
+          floatingActionButton: !isRecent
+              ? FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/add');
+                  },
+                  child: Icon(Icons.add),
+                  backgroundColor: Colors.pinkAccent,
+                )
+              : null,
         ),
       ],
     );
+  }
+
+  TextStyle style(bool condition) {
+    return condition
+        ? TextStyle(
+            color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)
+        : TextStyle(color: Colors.teal[100], fontSize: 18);
   }
 
   Widget buildMenus() {
@@ -77,21 +92,26 @@ class _HomeState extends State<Home> {
       children: <Widget>[
         Expanded(
           child: FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  isRecent = true;
+                });
+              },
               child: Text(
-                'Recent',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                'Recent Scanned',
+                style: style(isRecent),
               )),
         ),
         Expanded(
           child: FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  isRecent = false;
+                });
+              },
               child: Text(
-                'Homeliners',
-                style: TextStyle(color: Colors.grey[300], fontSize: 20),
+                'Passers',
+                style: style(!isRecent),
               )),
         ),
       ],
@@ -111,7 +131,7 @@ class _HomeState extends State<Home> {
           decoration:
               BoxDecoration(borderRadius: borderRadius, color: Colors.white),
           child: ListView.builder(
-              itemCount: homeLiners.length,
+              itemCount: passers.length,
               itemBuilder: (context, i) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
@@ -119,13 +139,13 @@ class _HomeState extends State<Home> {
                       onTap: () {},
                       leading: Icon(Icons.verified_user,
                           color: Colors.pinkAccent, size: 35),
-                      title: title(homeLiners[i].name),
-                      subtitle: Text(homeLiners[i].address),
+                      title: title(passers[i].name),
+                      subtitle: Text(passers[i].address),
                       trailing: PrettyQr(
                           // image: AssetImage('images/twitter.png'),
                           typeNumber: 3,
                           size: 50,
-                          data: homeLiners[i].code,
+                          data: passers[i].code,
                           errorCorrectLevel: QrErrorCorrectLevel.M,
                           roundEdges: true)),
                 );
