@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:qr_checker/services/passer_service.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/common/my_textfield.dart';
@@ -9,22 +11,24 @@ class AddForm extends StatefulWidget {
 }
 
 class _AddFormState extends State<AddForm> {
-  final passers = Passer(code: '', name: '', address: '');
+  final passer = Passer(code: '', name: '', address: '');
 
   @override
   Widget build(BuildContext context) {
+    final passerService = Provider.of<PasserService>(context);
+
     return Scaffold(
       appBar: AppBar(title: Text('ADD FORM')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
         child: Form(
-          child: Column(
+          child: ListView(
             children: <Widget>[
               MyTextField(
                 label: 'CODE',
                 onChanged: (value) {
                   setState(() {
-                    passers.code = value;
+                    passer.code = value;
                   });
                 },
               ),
@@ -32,7 +36,7 @@ class _AddFormState extends State<AddForm> {
                 label: 'FULLNAME',
                 onChanged: (value) {
                   setState(() {
-                    passers.name = value;
+                    passer.name = value;
                   });
                 },
               ),
@@ -40,7 +44,7 @@ class _AddFormState extends State<AddForm> {
                 label: 'ADDRESS',
                 onChanged: (value) {
                   setState(() {
-                    passers.address = value;
+                    passer.address = value;
                   });
                 },
               ),
@@ -48,7 +52,9 @@ class _AddFormState extends State<AddForm> {
                 height: 20,
               ),
               MyButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    passerService.add(passer);
+                  },
                   child: Text('SAVE',
                       style: TextStyle(fontSize: 18, color: Colors.white)))
             ],

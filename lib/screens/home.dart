@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
+import 'package:qr_checker/models/user.dart';
+import 'package:qr_checker/services/auth_service.dart';
 import 'package:qr_checker/services/passer_service.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
@@ -11,17 +14,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Passer> passers;
   bool isRecent = true;
+
+  AuthService auth = AuthService();
 
   @override
   void initState() {
-    passers = HomeLinerService().passers;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final passerService = Provider.of<PasserService>(context);
+    final user = Provider.of<User>(context);
     return Stack(
       children: <Widget>[
         Image.asset(
@@ -31,12 +36,19 @@ class _HomeState extends State<Home> {
           fit: BoxFit.cover,
         ),
         Scaffold(
+          drawer: myDrawer(),
           backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
           appBar: AppBar(
-            leading: Icon(
-              Icons.person,
-              size: 30,
-            ),
+            leading: Builder(builder: (context) {
+              return IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  icon: Icon(
+                    Icons.menu,
+                    size: 30,
+                  ));
+            }),
             backgroundColor: Colors.transparent,
             actions: <Widget>[
               Padding(
@@ -61,7 +73,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 buildButtons(),
                 buildMenus(),
-                buildList(),
+                buildList(passerService.passers),
               ],
             ),
           ),
@@ -76,6 +88,38 @@ class _HomeState extends State<Home> {
               : null,
         ),
       ],
+    );
+  }
+
+  Widget myDrawer() {
+    return Drawer(
+      child: ListView(
+        // Important: Remove any padding from the ListView.
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text('Drawer Header'),
+            decoration: BoxDecoration(
+              color: Colors.teal,
+            ),
+          ),
+          ListTile(
+            title: Text('Item 1'),
+            onTap: () {
+              // Update the state of the app.
+              // ...
+            },
+          ),
+          ListTile(
+            title: Text('Item 2'),
+            onTap: () {
+              // Update the state of the app.
+              // ...
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -118,7 +162,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildList() {
+  Widget buildList(List<Passer> passers) {
     final borderRadius = BorderRadius.only(
         topLeft: Radius.circular(20), topRight: Radius.circular(20));
 

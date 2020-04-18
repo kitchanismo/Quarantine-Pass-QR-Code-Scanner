@@ -1,30 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:qr_checker/screens/about.dart';
-import 'package:qr_checker/screens/add.dart';
-import 'package:qr_checker/screens/found_code.dart';
-import 'package:qr_checker/screens/home.dart';
-import 'package:qr_checker/screens/scanner.dart';
+import 'package:provider/provider.dart';
+import 'package:qr_checker/app.dart';
+import 'package:qr_checker/models/user.dart';
+import 'package:qr_checker/services/auth_service.dart';
+import 'package:qr_checker/services/passer_service.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => Home(),
-        '/add': (context) => AddForm(),
-        '/foundCode': (context) => FoundCode(),
-        '/scanner': (context) => Scanner(title: 'Scanner'),
-        '/about': (context) => About(title: 'Flutter Demo About Page'),
-      },
-    );
-  }
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  return runApp(MultiProvider(
+    providers: [
+      StreamProvider<User>.value(value: AuthService().user),
+      ChangeNotifierProvider<PasserService>.value(value: PasserService()),
+    ],
+    child: MyApp(),
+  ));
 }
