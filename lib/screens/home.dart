@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/models/user.dart';
+import 'package:qr_checker/screens/signin.dart';
 import 'package:qr_checker/services/auth_service.dart';
 import 'package:qr_checker/services/passer_service.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -25,8 +26,13 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final passerService = Provider.of<PasserService>(context);
+    final passers = Provider.of<List<Passer>>(context);
+
     final user = Provider.of<User>(context);
+
+    if (user == null) {
+      return SignIn();
+    }
     return Stack(
       children: <Widget>[
         Image.asset(
@@ -36,7 +42,7 @@ class _HomeState extends State<Home> {
           fit: BoxFit.cover,
         ),
         Scaffold(
-          drawer: myDrawer(),
+          drawer: myDrawer(user),
           backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
           appBar: AppBar(
             leading: Builder(builder: (context) {
@@ -73,32 +79,30 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 buildButtons(),
                 buildMenus(),
-                buildList(passerService.passers),
+                buildList(passers),
               ],
             ),
           ),
-          floatingActionButton: !isRecent
-              ? FloatingActionButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/add');
-                  },
-                  child: Icon(Icons.add),
-                  backgroundColor: Colors.pinkAccent,
-                )
-              : null,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/add');
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.pinkAccent,
+          ),
         ),
       ],
     );
   }
 
-  Widget myDrawer() {
+  Widget myDrawer(User user) {
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text('Drawer Header'),
+            child: Text(user == null ? '' : user.email),
             decoration: BoxDecoration(
               color: Colors.teal,
             ),
@@ -111,11 +115,11 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
-            title: Text('Item 2'),
-            onTap: () {
+            title: Text('Sign out'),
+            onTap: () async {
+              await auth.signOut();
               // Update the state of the app.
               // ...
-              Navigator.pop(context);
             },
           ),
         ],
@@ -170,30 +174,42 @@ class _HomeState extends State<Home> {
       return Text(text, style: TextStyle(fontSize: 25, color: Colors.teal));
     }
 
+    Widget buildLeadingIcon(bool isApproved) {
+      if (isApproved) {
+        return Icon(Icons.verified_user, color: Colors.green, size: 35);
+      }
+
+      return Icon(Icons.close, color: Colors.pinkAccent, size: 35);
+    }
+
     return Expanded(
       child: Container(
           decoration:
               BoxDecoration(borderRadius: borderRadius, color: Colors.white),
-          child: ListView.builder(
-              itemCount: passers.length,
-              itemBuilder: (context, i) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: ListTile(
-                      onTap: () {},
-                      leading: Icon(Icons.verified_user,
-                          color: Colors.pinkAccent, size: 35),
-                      title: title(passers[i].name),
-                      subtitle: Text(passers[i].address),
-                      trailing: PrettyQr(
-                          // image: AssetImage('images/twitter.png'),
-                          typeNumber: 3,
-                          size: 50,
-                          data: passers[i].code,
-                          errorCorrectLevel: QrErrorCorrectLevel.M,
-                          roundEdges: true)),
-                );
-              })),
+          child: passers.length > 0
+              ? ListView.builder(
+                  itemCount: passers.length,
+                  itemBuilder: (context, i) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: ListTile(
+                          onTap: () {},
+                          leading: buildLeadingIcon(
+                              passers[i].isApproved == null
+                                  ? false
+                                  : passers[i].isApproved),
+                          title: title(passers[i].name),
+                          subtitle: Text(passers[i].address),
+                          trailing: PrettyQr(
+                              // image: AssetImage('images/twitter.png'),
+                              typeNumber: 1,
+                              size: 50,
+                              data: passers[i].code,
+                              errorCorrectLevel: QrErrorCorrectLevel.M,
+                              roundEdges: true)),
+                    );
+                  })
+              : null),
     );
   }
 

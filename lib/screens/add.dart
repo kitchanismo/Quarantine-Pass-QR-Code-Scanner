@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_checker/services/passer_service.dart';
+import 'package:short_readable_id/short_readable_id.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/common/my_textfield.dart';
@@ -11,54 +10,66 @@ class AddForm extends StatefulWidget {
 }
 
 class _AddFormState extends State<AddForm> {
-  final passer = Passer(code: '', name: '', address: '');
+  Passer passer = Passer(code: '', name: '', address: '');
+  String code;
+
+  @override
+  void initState() {
+    code = idGenerator.generateReadable();
+    passer.code = code;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final passerService = Provider.of<PasserService>(context);
+    // final passerService = Provider.of<PasserService>(context);
 
     return Scaffold(
       appBar: AppBar(title: Text('ADD FORM')),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
-        child: Form(
-          child: ListView(
-            children: <Widget>[
-              MyTextField(
-                label: 'CODE',
-                onChanged: (value) {
-                  setState(() {
-                    passer.code = value;
-                  });
+      body: Form(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+          children: <Widget>[
+            MyTextField(
+              readOnly: true,
+              initialValue: code,
+              label: Text('CODE',
+                  style: TextStyle(color: Colors.grey[700], fontSize: 20)),
+              onChanged: (value) {
+                setState(() {
+                  passer.code = value;
+                });
+              },
+            ),
+            MyTextField(
+              label: Text('FULLNAME',
+                  style: TextStyle(color: Colors.grey[700], fontSize: 20)),
+              onChanged: (value) {
+                setState(() {
+                  passer.name = value;
+                });
+              },
+            ),
+            MyTextField(
+              label: Text('ADDRESS',
+                  style: TextStyle(color: Colors.grey[700], fontSize: 20)),
+              onChanged: (value) {
+                setState(() {
+                  passer.address = value;
+                });
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            MyButton(
+                onPressed: () {
+                  // passerService.add(passer);
+                  Navigator.pushNamed(context, '/preview', arguments: passer);
                 },
-              ),
-              MyTextField(
-                label: 'FULLNAME',
-                onChanged: (value) {
-                  setState(() {
-                    passer.name = value;
-                  });
-                },
-              ),
-              MyTextField(
-                label: 'ADDRESS',
-                onChanged: (value) {
-                  setState(() {
-                    passer.address = value;
-                  });
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              MyButton(
-                  onPressed: () {
-                    passerService.add(passer);
-                  },
-                  child: Text('SAVE',
-                      style: TextStyle(fontSize: 18, color: Colors.white)))
-            ],
-          ),
+                child: Text('CONTINUE',
+                    style: TextStyle(fontSize: 18, color: Colors.white)))
+          ],
         ),
       ),
     );

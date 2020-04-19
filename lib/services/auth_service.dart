@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qr_checker/models/user.dart';
+import 'package:tuple/tuple.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -21,12 +22,18 @@ class AuthService {
     }
   }
 
-  Future signIn(User user) async {
+  Future<Tuple2<String, bool>> signIn(User user) async {
     try {
       await _auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
+
+      return Tuple2<String, bool>('Logged In!', true);
     } catch (e) {
-      print(e.toString());
+      if (e.code == 'ERROR_WRONG_PASSWORD' ||
+          e.code == 'ERROR_USER_NOT_FOUND') {
+        return Tuple2<String, bool>('Invalid Email or Password!', false);
+      }
+      return Tuple2<String, bool>(e.code, false);
     }
   }
 

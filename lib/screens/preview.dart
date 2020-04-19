@@ -1,0 +1,127 @@
+import 'package:flutter/material.dart';
+import 'package:qr_checker/common/my_button.dart';
+import 'package:qr_checker/models/passer.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:qr/qr.dart';
+import 'package:qr_checker/services/passer_service.dart';
+
+class Preview extends StatelessWidget {
+  final passerService = PasserService();
+  @override
+  Widget build(BuildContext context) {
+    Passer passer = ModalRoute.of(context).settings.arguments;
+
+    return Scaffold(
+        backgroundColor: Colors.teal,
+        appBar: AppBar(elevation: 0, title: Text('Preview')),
+        body: Container(
+            child: ListView(
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              buildQRCode(context: context, code: passer.code),
+            ]),
+            buildCard(passer, context),
+          ],
+        )));
+  }
+
+  Widget buildCard(Passer passer, BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      // Text(passer.code, style: TextStyle(fontSize: 30)),
+
+      Container(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+          decoration: BoxDecoration(color: Colors.teal),
+          child: Center(
+            child: Text(passer.code,
+                style: TextStyle(fontSize: 25, color: Colors.white)),
+          )),
+      Container(
+        decoration: BoxDecoration(color: Colors.white),
+        padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            buildText(text: passer.name, label: 'NAME'),
+            SizedBox(
+              height: 20,
+            ),
+            buildText(text: passer.address, label: 'ADDRESS'),
+            SizedBox(
+              height: 20,
+            ),
+            MyButton(
+                onPressed: () async {
+                  await passerService.add(passer);
+                  await _neverSatisfied(context);
+                },
+                child: Text('SAVE',
+                    style: TextStyle(color: Colors.white, fontSize: 20)))
+          ],
+        ),
+      )
+    ]);
+  }
+
+  Future<void> _neverSatisfied(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('QR SCANNER'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Succesfully added!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            MyButton(
+              child: Text('Ok',
+                  style: TextStyle(fontSize: 15, color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildText({String text, String label}) {
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(label, style: TextStyle(fontSize: 20)),
+        SizedBox(
+          height: 10,
+        ),
+        Text(text,
+            style: TextStyle(
+                fontSize: 25, color: Colors.teal, fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
+  Widget buildQRCode({BuildContext context, String code}) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(30, 30, 30, 20),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: Colors.white),
+        child: PrettyQr(
+
+            // image: AssetImage('images/twitter.png'),
+            typeNumber: 1,
+            size: MediaQuery.of(context).size.width - 50,
+            data: code,
+            errorCorrectLevel: QrErrorCorrectLevel.M,
+            roundEdges: true),
+      ),
+    );
+  }
+}
