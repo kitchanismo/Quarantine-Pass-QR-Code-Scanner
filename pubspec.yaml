@@ -26,6 +26,9 @@ dependencies:
   firebase_auth: ^0.16.0
   tuple: ^1.0.3
   short_readable_id: ^1.5.1
+  flutter_spinkit: '^4.1.2'
+  edge_alert: ^0.0.1
+  flare_flutter: ^2.0.3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -46,6 +49,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/covid.jpg
+    - assets/ted.flr
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

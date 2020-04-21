@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_checker/common/my_button.dart';
+import 'package:qr_checker/common/loading.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/models/user.dart';
 import 'package:qr_checker/screens/signin.dart';
@@ -19,6 +20,8 @@ class _HomeState extends State<Home> {
 
   AuthService auth = AuthService();
 
+  PasserService passerService = PasserService();
+
   @override
   void initState() {
     super.initState();
@@ -26,8 +29,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final passers = Provider.of<List<Passer>>(context);
-
     final user = Provider.of<User>(context);
 
     if (user == null) {
@@ -79,7 +80,10 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 buildButtons(),
                 buildMenus(),
-                buildList(passers),
+                StreamBuilder<List<Passer>>(
+                    stream: passerService.fetchPassers(),
+                    initialData: [],
+                    builder: (ctx, snap) => buildList(snap.data)),
               ],
             ),
           ),
@@ -118,6 +122,7 @@ class _HomeState extends State<Home> {
             title: Text('Sign out'),
             onTap: () async {
               await auth.signOut();
+              // Navigator.pushNamed(context, '/signin');
               // Update the state of the app.
               // ...
             },

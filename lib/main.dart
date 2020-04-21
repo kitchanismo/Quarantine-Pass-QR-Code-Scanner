@@ -8,10 +8,25 @@ import 'package:qr_checker/services/passer_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  final user = AuthService().user;
+
+  //print(user);
   return runApp(MultiProvider(
     providers: [
-      StreamProvider<User>.value(value: AuthService().user),
-      StreamProvider<List<Passer>>.value(value: PasserService().fetchPassers()),
+      StreamProvider<User>(
+        create: (_) => user,
+        initialData: null,
+      ),
+      //prevent fetching passers when not login
+      // ProxyProvider<User, List<Passer>>(
+      //   update: (_, user, __) {
+
+      //     return Stream(
+      //       initialData: [],
+      //       stream: PasserService().fetchPassers(),
+      //       builder: (ctx,snapshot)=>snapshot.data);
+      //   },
+      // ),
     ],
     child: MyApp(),
   ));

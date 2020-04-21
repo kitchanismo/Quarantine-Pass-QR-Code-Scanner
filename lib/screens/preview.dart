@@ -4,6 +4,7 @@ import 'package:qr_checker/models/passer.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
 import 'package:qr_checker/services/passer_service.dart';
+import 'package:edge_alert/edge_alert.dart';
 
 class Preview extends StatelessWidget {
   final passerService = PasserService();
@@ -52,8 +53,27 @@ class Preview extends StatelessWidget {
             ),
             MyButton(
                 onPressed: () async {
-                  await passerService.add(passer);
-                  await _neverSatisfied(context);
+                  final res = await passerService.add(passer);
+                  if (res) {
+                    EdgeAlert.show(
+                      context,
+                      title: 'QR SCANNER',
+                      description: 'Successfully Added!',
+                      backgroundColor: Colors.green,
+                      gravity: EdgeAlert.TOP,
+                      duration: EdgeAlert.LENGTH_LONG,
+                    );
+                    Navigator.pushNamed(context, '/');
+                    return;
+                  }
+                  EdgeAlert.show(
+                    context,
+                    title: 'QR SCANNER',
+                    description: 'Error Occured!',
+                    backgroundColor: Colors.pinkAccent,
+                    gravity: EdgeAlert.TOP,
+                    duration: EdgeAlert.LENGTH_LONG,
+                  );
                 },
                 child: Text('SAVE',
                     style: TextStyle(color: Colors.white, fontSize: 20)))

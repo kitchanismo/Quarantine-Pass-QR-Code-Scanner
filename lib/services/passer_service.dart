@@ -1,10 +1,8 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PasserService extends ChangeNotifier {
+class PasserService {
   final collection = Firestore.instance.collection('passers');
 
   List<Passer> _passers = [
@@ -88,21 +86,14 @@ class PasserService extends ChangeNotifier {
         address: doc['address']);
   }
 
+  Stream<QuerySnapshot> snaps() => collection.snapshots();
+
   Stream<List<Passer>> fetchPassers() {
-    var snaps = collection.snapshots();
-    return snaps.map((list) => list.documents.map(mapToPasser).toList());
+    ///var snaps = collection.snapshots();
+    return snaps().map((list) => list.documents.map(mapToPasser).toList());
   }
 
-  set passers(List<Passer> passers) {
-    _passers.reversed;
-    notifyListeners();
-  }
-
-  void sndksd() {
-    collection.getDocuments();
-  }
-
-  Future add(Passer passer) async {
+  Future<bool> add(Passer passer) async {
     try {
       await collection.document().setData({
         'isApproved': passer.isApproved,
@@ -110,8 +101,10 @@ class PasserService extends ChangeNotifier {
         'name': passer.name,
         'address': passer.address
       });
+      return true;
     } catch (e) {
       print(e.toString());
+      return false;
     }
   }
 

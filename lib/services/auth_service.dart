@@ -13,27 +13,31 @@ class AuthService {
     return _auth.onAuthStateChanged.map(mapToUser);
   }
 
-  Future signUp(User user) async {
+  Future<bool> signUp(User user) async {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
+      return true;
     } catch (e) {
       print(e.toString());
+      return false;
     }
   }
 
   Future<Tuple2<String, bool>> signIn(User user) async {
     try {
+      //  return Tuple2<String, bool>('Logged In!', true);
       await _auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
 
       return Tuple2<String, bool>('Logged In!', true);
     } catch (e) {
+      print(e.toString());
       if (e.code == 'ERROR_WRONG_PASSWORD' ||
           e.code == 'ERROR_USER_NOT_FOUND') {
         return Tuple2<String, bool>('Invalid Email or Password!', false);
       }
-      return Tuple2<String, bool>(e.code, false);
+      return Tuple2<String, bool>('Network Error', false);
     }
   }
 

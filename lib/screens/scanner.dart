@@ -15,7 +15,6 @@ class _ScannerState extends State<Scanner> {
   GlobalKey qrKey = GlobalKey();
   QRViewController controller;
   var qrText = "";
-
   @override
   void initState() {
     this.controller?.resumeCamera();
