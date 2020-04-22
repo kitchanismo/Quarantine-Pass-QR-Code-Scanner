@@ -13,7 +13,11 @@ class Helper {
   }
 
   static bool isPassValid(DateTime date) {
-    if (date.compareTo(DateTime.now()) < 0) {
+    final validity = DateTime(date.year, date.month, date.day);
+    final now = DateTime.now();
+    final current = DateTime(now.year, now.month, now.day);
+
+    if (validity.compareTo(current) < 0) {
       return false;
     }
     return true;
