@@ -5,101 +5,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class PasserService {
   final collection = Firestore.instance.collection('passers');
 
-  List<Passer> _passers = [
-    Passer(
-        code: 'shdjfhdj',
-        name: 'sample csscc',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdfgfhdj',
-        name: 'kitchan shusdh',
-        address: 'somewhere',
-        isApproved: false),
-    Passer(
-        code: 'hhjjhdjfhdj',
-        name: 'kitcha3n uscs',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdjerfhdj',
-        name: 'kitchan4 shcsuc',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdjfhdj',
-        name: 'kitchan',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdfgfhdj',
-        name: 'kitchan2',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'hhjjhdjfhdj',
-        name: 'kitcha3n',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdjfhdj',
-        name: 'kitchan4',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdjfhdj',
-        name: 'kitchan',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdfgfhdj',
-        name: 'kitchan2',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'hhjjhdjfhdj',
-        name: 'kitcha3n',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdjerfhdj',
-        name: 'kitchan4',
-        address: 'somewhere',
-        isApproved: true),
-    Passer(
-        code: 'shdttjfhdj',
-        name: 'kitcha5n',
-        address: 'somewhere',
-        isApproved: true),
-  ];
-
-  // get passers {
-  //   return _passers;
-  // }
-
   Passer mapToPasser(DocumentSnapshot doc) {
     return Passer(
         id: doc.documentID,
-        isApproved: doc['isApproved'],
-        code: doc['code'],
-        name: doc['name'],
-        address: doc['address']);
+        code: doc['code'] ?? '',
+        name: doc['name'] ?? '',
+        validity: doc['validity']?.toDate() ?? null,
+        address: doc['address'] ?? '');
   }
 
   Stream<QuerySnapshot> snaps() => collection.snapshots();
 
   Stream<List<Passer>> fetchPassers() {
-    ///var snaps = collection.snapshots();
     return snaps().map((list) => list.documents.map(mapToPasser).toList());
   }
 
   Future<bool> add(Passer passer) async {
     try {
       await collection.document().setData({
-        'isApproved': passer.isApproved,
         'code': passer.code,
         'name': passer.name,
-        'address': passer.address
+        'address': passer.address,
+        'validity': passer.validity
       });
       return true;
     } catch (e) {
@@ -111,7 +38,6 @@ class PasserService {
   Future update(Passer passer) async {
     try {
       await collection.document(passer.id).updateData({
-        'uid': passer.id,
         'code': passer.code,
         'name': passer.name,
         'address': passer.address
@@ -119,5 +45,13 @@ class PasserService {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<Passer> isCodeValid(String code) {
+    return collection
+        .where('code', isEqualTo: code)
+        .getDocuments()
+        .then((snaps) => snaps.documents.map(mapToPasser).toList().first)
+        .catchError((err) => print(err));
   }
 }

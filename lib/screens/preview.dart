@@ -6,6 +6,7 @@ import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
 import 'package:qr_checker/services/passer_service.dart';
 import 'package:edge_alert/edge_alert.dart';
+import 'package:qr_checker/utils/helper.dart';
 
 class Preview extends StatefulWidget {
   @override
@@ -80,18 +81,14 @@ class _PreviewState extends State<Preview> {
           )),
       Container(
         decoration: BoxDecoration(color: Colors.white),
-        padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+        padding: EdgeInsets.fromLTRB(30, 10, 30, 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             buildText(text: passer.name, label: 'NAME'),
-            SizedBox(
-              height: 20,
-            ),
             buildText(text: passer.address, label: 'ADDRESS'),
-            SizedBox(
-              height: 20,
-            ),
+            buildText(
+                text: Helper.dateOnly(passer.validity), label: 'VALIDITY'),
             MyButton(
                 onPressed: () async => await onSave(passer),
                 child: Text('SAVE',
@@ -102,42 +99,39 @@ class _PreviewState extends State<Preview> {
     ]);
   }
 
-  Future<void> _neverSatisfied(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('QR SCANNER'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Succesfully added!'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            MyButton(
-              child: Text('Ok',
-                  style: TextStyle(fontSize: 15, color: Colors.white)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Future<void> _neverSatisfied(BuildContext context) async {
+  //   return showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: false, // user must tap button!
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('QR SCANNER'),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               Text('Succesfully added!'),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           MyButton(
+  //             child: Text('Ok',
+  //                 style: TextStyle(fontSize: 15, color: Colors.white)),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget buildText({String text, String label}) {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(label, style: TextStyle(fontSize: 20)),
-        SizedBox(
-          height: 10,
-        ),
         Text(text,
             style: TextStyle(
                 fontSize: 25, color: Colors.teal, fontWeight: FontWeight.bold)),

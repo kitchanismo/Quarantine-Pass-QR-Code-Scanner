@@ -16,7 +16,7 @@ class MyButton extends StatefulWidget {
 }
 
 class _MyButtonState extends State<MyButton> {
-  final padding = EdgeInsets.symmetric(vertical: 15, horizontal: 0);
+  final padding = EdgeInsets.fromLTRB(0, 10, 0, 5);
 
   @override
   Widget build(BuildContext context) {

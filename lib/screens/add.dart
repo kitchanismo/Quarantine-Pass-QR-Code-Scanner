@@ -1,9 +1,12 @@
 import 'package:edge_alert/edge_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_checker/utils/helper.dart';
 import 'package:short_readable_id/short_readable_id.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/common/my_textfield.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 
 class AddForm extends StatefulWidget {
   @override
@@ -11,7 +14,8 @@ class AddForm extends StatefulWidget {
 }
 
 class _AddFormState extends State<AddForm> {
-  Passer passer = Passer(code: '', name: '', address: '');
+  Passer passer =
+      Passer(code: '', name: '', address: '', validity: DateTime.now());
   String code;
 
   @override
@@ -25,7 +29,7 @@ class _AddFormState extends State<AddForm> {
     if (passer.code == '' || passer.name == '' || passer.address == '') {
       EdgeAlert.show(
         context,
-        icon: Icons.notifications,
+        icon: FontAwesome.times,
         title: 'Invalid Input',
         description: 'Fill-up all the fields.',
         backgroundColor: Colors.pinkAccent,
@@ -76,6 +80,33 @@ class _AddFormState extends State<AddForm> {
                 });
               },
             ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 2,
+                  child: Wrap(direction: Axis.vertical, children: <Widget>[
+                    Text('VALIDITY',
+                        style:
+                            TextStyle(color: Colors.grey[700], fontSize: 20)),
+                    Text(Helper.dateOnly(passer.validity),
+                        style: TextStyle(color: Colors.teal, fontSize: 25))
+                  ]),
+                ),
+                Expanded(
+                    child: Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                      icon: Icon(
+                        FontAwesome.calendar,
+                        size: 40,
+                        color: Colors.teal,
+                      ),
+                      onPressed: () {
+                        _showDatePicker();
+                      }),
+                )),
+              ],
+            ),
             SizedBox(
               height: 20,
             ),
@@ -86,6 +117,32 @@ class _AddFormState extends State<AddForm> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDatePicker() {
+    DatePicker.showDatePicker(
+      context,
+      pickerTheme: DateTimePickerTheme(
+        // showTitle: _showTitle,
+        confirm:
+            Text('Confirm', style: TextStyle(color: Colors.teal, fontSize: 20)),
+        cancel: Text('Cancel', style: TextStyle(fontSize: 20)),
+      ),
+      minDateTime: DateTime.now(),
+      // maxDateTime: DateTime.parse(MAX_DATETIME),
+      initialDateTime: passer.validity,
+
+      onChange: (dateTime, List<int> index) {
+        setState(() {
+          passer.validity = dateTime;
+        });
+      },
+      onConfirm: (dateTime, List<int> index) {
+        setState(() {
+          passer.validity = dateTime;
+        });
+      },
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_checker/common/my_button.dart';
-import 'package:qr_checker/common/loading.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/models/user.dart';
 import 'package:qr_checker/screens/signin.dart';
@@ -9,6 +8,7 @@ import 'package:qr_checker/services/auth_service.dart';
 import 'package:qr_checker/services/passer_service.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
+import 'package:qr_checker/utils/helper.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -36,12 +36,12 @@ class _HomeState extends State<Home> {
     }
     return Stack(
       children: <Widget>[
-        Image.asset(
-          'assets/covid.jpg',
-          height: MediaQuery.of(context).size.height - 500,
-          width: MediaQuery.of(context).size.width,
-          fit: BoxFit.cover,
-        ),
+        // Image.asset(
+        //   'assets/covid.jpg',
+        //   height: MediaQuery.of(context).size.height - 500,
+        //   width: MediaQuery.of(context).size.width,
+        //   fit: BoxFit.cover,
+        // ),
         Scaffold(
           drawer: myDrawer(user),
           backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
@@ -173,18 +173,10 @@ class _HomeState extends State<Home> {
 
   Widget buildList(List<Passer> passers) {
     final borderRadius = BorderRadius.only(
-        topLeft: Radius.circular(20), topRight: Radius.circular(20));
+        topLeft: Radius.circular(30), topRight: Radius.circular(30));
 
     Text title(String text) {
       return Text(text, style: TextStyle(fontSize: 25, color: Colors.teal));
-    }
-
-    Widget buildLeadingIcon(bool isApproved) {
-      if (isApproved) {
-        return Icon(Icons.verified_user, color: Colors.green, size: 35);
-      }
-
-      return Icon(Icons.close, color: Colors.pinkAccent, size: 35);
     }
 
     return Expanded(
@@ -199,11 +191,9 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: ListTile(
                           onTap: () {},
-                          leading: buildLeadingIcon(
-                              passers[i].isApproved == null
-                                  ? false
-                                  : passers[i].isApproved),
-                          title: title(passers[i].name),
+                          leading: Icon(Icons.verified_user,
+                              color: Colors.green, size: 35),
+                          title: title(Helper.toElipse(input: passers[i].name)),
                           subtitle: Text(passers[i].address),
                           trailing: PrettyQr(
                               // image: AssetImage('images/twitter.png'),
@@ -227,7 +217,7 @@ class _HomeState extends State<Home> {
           Expanded(
             child: MyButton(
               child: Text('SCAN',
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
+                  style: TextStyle(color: Colors.white, fontSize: 30)),
               onPressed: () {
                 Navigator.pushNamed(context, '/scanner');
               },

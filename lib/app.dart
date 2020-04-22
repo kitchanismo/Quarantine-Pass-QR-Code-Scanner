@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_checker/models/user.dart';
 import 'package:qr_checker/screens/add.dart';
-import 'package:qr_checker/screens/found_code.dart';
+import 'package:qr_checker/screens/found.dart';
 import 'package:qr_checker/screens/home.dart';
 import 'package:qr_checker/screens/preview.dart';
 import 'package:qr_checker/screens/scanner.dart';
@@ -21,16 +19,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
+      theme: ThemeData(primarySwatch: Colors.teal, fontFamily: 'Baloo'),
       initialRoute: '/',
       routes: {
         '/': (context) => Home(),
         '/preview': (context) => Preview(),
         '/add': (context) => AddForm(),
         '/signin': (context) => SignIn(),
-        '/foundCode': (context) => FoundCode(),
+        '/found': (context) => Found(),
         '/scanner': (context) => Scanner(title: 'Scanner'),
       },
     );

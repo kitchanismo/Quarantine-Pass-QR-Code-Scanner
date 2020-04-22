@@ -7,12 +7,17 @@ class MyTextField extends StatefulWidget {
   final bool obscureText;
   final String initialValue;
   final bool readOnly;
+
+  final Function onTap;
+  final TextEditingController controller;
   MyTextField(
-      {@required this.onChanged,
+      {this.onChanged,
       this.readOnly = false,
       this.label,
       this.textColor = Colors.teal,
       this.initialValue,
+      this.onTap,
+      this.controller,
       this.obscureText = false});
 
   @override
@@ -27,13 +32,15 @@ class _MyTextFieldState extends State<MyTextField> {
       children: <Widget>[
         widget.label,
         TextFormField(
+            controller: widget.controller,
+            onTap: widget.onTap,
             readOnly: widget.readOnly,
             initialValue: widget.initialValue,
             obscureText: widget.obscureText,
             cursorColor: widget.textColor,
             style: TextStyle(fontSize: 25, color: widget.textColor),
             onChanged: widget.onChanged),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:edge_alert/edge_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:qr_checker/common/loading.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/user.dart';
@@ -74,7 +75,7 @@ class _SignInState extends State<SignIn> {
     if (result.item2 == false) {
       EdgeAlert.show(
         context,
-        icon: Icons.close,
+        icon: FontAwesome.times,
         title: 'QR SCANNER',
         description: result.item1,
         backgroundColor: Colors.pinkAccent,
@@ -108,12 +109,12 @@ class _SignInState extends State<SignIn> {
       isLoading: isLoading,
       child: Stack(
         children: <Widget>[
-          Image.asset(
-            'assets/covid.jpg',
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover,
-          ),
+          // Image.asset(
+          //   'assets/covid.jpg',
+          //   height: MediaQuery.of(context).size.height,
+          //   width: MediaQuery.of(context).size.width,
+          //   fit: BoxFit.cover,
+          // ),
           Scaffold(
               backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
               body: Container(
