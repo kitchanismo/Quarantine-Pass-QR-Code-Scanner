@@ -1,3 +1,4 @@
+import 'package:edge_alert/edge_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:short_readable_id/short_readable_id.dart';
 import 'package:qr_checker/common/my_button.dart';
@@ -18,6 +19,22 @@ class _AddFormState extends State<AddForm> {
     code = idGenerator.generateReadable();
     passer.code = code;
     super.initState();
+  }
+
+  void onContinue() {
+    if (passer.code == '' || passer.name == '' || passer.address == '') {
+      EdgeAlert.show(
+        context,
+        icon: Icons.notifications,
+        title: 'Invalid Input',
+        description: 'Fill-up all the fields.',
+        backgroundColor: Colors.pinkAccent,
+        gravity: EdgeAlert.TOP,
+        duration: EdgeAlert.LENGTH_LONG,
+      );
+      return;
+    }
+    Navigator.pushNamed(context, '/preview', arguments: passer);
   }
 
   @override
@@ -63,10 +80,7 @@ class _AddFormState extends State<AddForm> {
               height: 20,
             ),
             MyButton(
-                onPressed: () {
-                  // passerService.add(passer);
-                  Navigator.pushNamed(context, '/preview', arguments: passer);
-                },
+                onPressed: onContinue,
                 child: Text('CONTINUE',
                     style: TextStyle(fontSize: 18, color: Colors.white)))
           ],

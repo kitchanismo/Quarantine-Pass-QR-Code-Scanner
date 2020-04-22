@@ -136,8 +136,7 @@ class TeddyController extends FlareControls {
     //return Future.delayed(Duration(seconds: 2));
   }
 
-  Future fail() {
+  void fail() {
     play("fail");
-    return Future.delayed(Duration(seconds: 2));
   }
 }

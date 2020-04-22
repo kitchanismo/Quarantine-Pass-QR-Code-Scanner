@@ -22,8 +22,85 @@ class _SignInState extends State<SignIn> {
   }
 
   final auth = AuthService();
-  User user = User();
+  User user = User(email: '', password: '');
   bool isLoading = false;
+
+  bool isInputValid() {
+    if (user.email == '' || user.password == '') {
+      EdgeAlert.show(
+        context,
+        icon: Icons.notifications,
+        title: 'Invalid Input',
+        description: 'Fill-up all the fields.',
+        backgroundColor: Colors.pinkAccent,
+        gravity: EdgeAlert.TOP,
+        duration: EdgeAlert.LENGTH_LONG,
+      );
+      _teddyController.fail();
+      return false;
+    }
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(user.email);
+
+    if (!emailValid) {
+      EdgeAlert.show(
+        context,
+        icon: Icons.notifications,
+        title: 'Invalid Input',
+        description: 'Email is in invalid format!',
+        backgroundColor: Colors.pinkAccent,
+        gravity: EdgeAlert.TOP,
+        duration: EdgeAlert.LENGTH_LONG,
+      );
+      _teddyController.fail();
+      return false;
+    }
+    return true;
+  }
+
+  void onSubmit() async {
+    if (!isInputValid()) {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final result = await auth.signIn(user);
+
+    print(result.item1);
+    if (result.item2 == false) {
+      EdgeAlert.show(
+        context,
+        icon: Icons.close,
+        title: 'QR SCANNER',
+        description: result.item1,
+        backgroundColor: Colors.pinkAccent,
+        gravity: EdgeAlert.TOP,
+        duration: EdgeAlert.LENGTH_VERY_LONG,
+      );
+      _teddyController.fail();
+      await Future.delayed(Duration(seconds: 2));
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+    EdgeAlert.show(
+      context,
+      icon: Icons.check,
+      title: 'QR SCANNER',
+      description: result.item1,
+      backgroundColor: Colors.green,
+      gravity: EdgeAlert.TOP,
+      duration: EdgeAlert.LENGTH_LONG,
+    );
+    // _teddyController.success();
+
+    // Navigator.pushNamed(context, '/');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,47 +181,7 @@ class _SignInState extends State<SignIn> {
                                           CrossAxisAlignment.stretch,
                                       children: <Widget>[
                                         MyButton(
-                                          onPressed: () async {
-                                            setState(() {
-                                              isLoading = true;
-                                            });
-
-                                            final result =
-                                                await auth.signIn(user);
-
-                                            print(result.item1);
-                                            if (result.item2 == false) {
-                                              EdgeAlert.show(
-                                                context,
-                                                icon: Icons.close,
-                                                title: 'QR SCANNER',
-                                                description: result.item1,
-                                                backgroundColor:
-                                                    Colors.pinkAccent,
-                                                gravity: EdgeAlert.TOP,
-                                                duration:
-                                                    EdgeAlert.LENGTH_VERY_LONG,
-                                              );
-                                              await _teddyController.fail();
-
-                                              setState(() {
-                                                isLoading = false;
-                                              });
-                                              return;
-                                            }
-                                            EdgeAlert.show(
-                                              context,
-                                              icon: Icons.check,
-                                              title: 'QR SCANNER',
-                                              description: result.item1,
-                                              backgroundColor: Colors.green,
-                                              gravity: EdgeAlert.TOP,
-                                              duration: EdgeAlert.LENGTH_LONG,
-                                            );
-                                            // _teddyController.success();
-
-                                            // Navigator.pushNamed(context, '/');
-                                          },
+                                          onPressed: onSubmit,
                                           child: Text('SIGN IN',
                                               style: TextStyle(
                                                   color: Colors.white,

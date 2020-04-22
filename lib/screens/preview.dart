@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_checker/common/loading.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -6,24 +7,64 @@ import 'package:qr/qr.dart';
 import 'package:qr_checker/services/passer_service.dart';
 import 'package:edge_alert/edge_alert.dart';
 
-class Preview extends StatelessWidget {
+class Preview extends StatefulWidget {
+  @override
+  _PreviewState createState() => _PreviewState();
+}
+
+class _PreviewState extends State<Preview> {
   final passerService = PasserService();
+  bool isLoading = false;
+
+  Future onSave(Passer passer) async {
+    setState(() {
+      isLoading = true;
+    });
+    final res = await passerService.add(passer);
+    setState(() {
+      isLoading = false;
+    });
+    if (res) {
+      EdgeAlert.show(
+        context,
+        title: 'QR SCANNER',
+        description: 'Successfully Added!',
+        backgroundColor: Colors.green,
+        gravity: EdgeAlert.TOP,
+        duration: EdgeAlert.LENGTH_LONG,
+      );
+      Navigator.pushNamed(context, '/');
+      return;
+    }
+    EdgeAlert.show(
+      context,
+      title: 'QR SCANNER',
+      description: 'Error Occured!',
+      backgroundColor: Colors.pinkAccent,
+      gravity: EdgeAlert.TOP,
+      duration: EdgeAlert.LENGTH_LONG,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Passer passer = ModalRoute.of(context).settings.arguments;
 
-    return Scaffold(
-        backgroundColor: Colors.teal,
-        appBar: AppBar(elevation: 0, title: Text('Preview')),
-        body: Container(
-            child: ListView(
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              buildQRCode(context: context, code: passer.code),
-            ]),
-            buildCard(passer, context),
-          ],
-        )));
+    return Loading(
+      isLoading: isLoading,
+      child: Scaffold(
+          backgroundColor: Colors.teal,
+          appBar: AppBar(elevation: 0, title: Text('Preview')),
+          body: Container(
+              child: ListView(
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                buildQRCode(context: context, code: passer.code),
+              ]),
+              buildCard(passer, context),
+            ],
+          ))),
+    );
   }
 
   Widget buildCard(Passer passer, BuildContext context) {
@@ -52,29 +93,7 @@ class Preview extends StatelessWidget {
               height: 20,
             ),
             MyButton(
-                onPressed: () async {
-                  final res = await passerService.add(passer);
-                  if (res) {
-                    EdgeAlert.show(
-                      context,
-                      title: 'QR SCANNER',
-                      description: 'Successfully Added!',
-                      backgroundColor: Colors.green,
-                      gravity: EdgeAlert.TOP,
-                      duration: EdgeAlert.LENGTH_LONG,
-                    );
-                    Navigator.pushNamed(context, '/');
-                    return;
-                  }
-                  EdgeAlert.show(
-                    context,
-                    title: 'QR SCANNER',
-                    description: 'Error Occured!',
-                    backgroundColor: Colors.pinkAccent,
-                    gravity: EdgeAlert.TOP,
-                    duration: EdgeAlert.LENGTH_LONG,
-                  );
-                },
+                onPressed: () async => await onSave(passer),
                 child: Text('SAVE',
                     style: TextStyle(color: Colors.white, fontSize: 20)))
           ],
