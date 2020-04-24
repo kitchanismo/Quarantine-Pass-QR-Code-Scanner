@@ -118,12 +118,12 @@ class _SignInState extends State<SignIn> {
           Scaffold(
               backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
               body: Container(
-                child: ListView(padding: EdgeInsets.only(top: 0), children: [
+                child: ListView(children: [
                   buildBanner(
                       context: context,
                       child: Form(
                           child: Padding(
-                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 30),
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -139,7 +139,7 @@ class _SignInState extends State<SignIn> {
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          0, 15, 0, 5),
+                                          0, 10, 0, 0),
                                       child: Text('Welcome',
                                           style: TextStyle(
                                               fontSize: 30,
@@ -174,21 +174,21 @@ class _SignInState extends State<SignIn> {
                                             user.password = value;
                                           });
                                         }),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: <Widget>[
-                                        MyButton(
-                                          onPressed: onSubmit,
-                                          child: Text('SIGN IN',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20)),
-                                        ),
-                                      ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: <Widget>[
+                                          MyButton(
+                                            onPressed: onSubmit,
+                                            child: Text('SIGN IN',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20)),
+                                          ),
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
