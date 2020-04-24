@@ -210,7 +210,7 @@ class _SignInState extends State<SignIn> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 15, 15),
+              padding: EdgeInsets.fromLTRB(0, 20, 15, 15),
               width: MediaQuery.of(context).size.width,
               height: 350,
               child: FlareActor("assets/ted.flr",

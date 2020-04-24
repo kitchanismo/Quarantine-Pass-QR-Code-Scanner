@@ -35,6 +35,7 @@ class _MyButtonState extends State<MyButton> {
 
     return FlatButton(
         onPressed: widget.onPressed,
+        disabledColor: Colors.grey,
         color: widget.borderColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(

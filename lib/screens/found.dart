@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
+import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/utils/helper.dart';
 
@@ -15,6 +16,7 @@ class Found extends StatefulWidget {
 class _FoundState extends State<Found> {
   bool isIDSwitched = false;
   bool isMaskSwitched = false;
+
   @override
   Widget build(BuildContext context) {
     final Passer passer = ModalRoute.of(context).settings.arguments;
@@ -39,7 +41,7 @@ class _FoundState extends State<Found> {
                 buildToggles(passer.code),
               ]),
             ),
-            buildDetails(passer)
+            buildDetails(passer),
           ],
         ));
   }
@@ -91,12 +93,43 @@ class _FoundState extends State<Found> {
                 label: 'Validity',
                 text: Helper.dateOnly(passer.validity),
                 child: renderIcon()),
+            buildButtons(passer.validity)
           ],
         ),
         decoration: BoxDecoration(
             color: Colors.teal,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+      ),
+    );
+  }
+
+  Widget buildButtons(DateTime validity) {
+    var isPassed =
+        isMaskSwitched && isIDSwitched && Helper.isPassValid(validity);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: MyButton(
+                onPressed: isPassed ? () {} : null,
+                child: Text('PASS',
+                    style: TextStyle(color: Colors.white, fontSize: 18))),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            child: MyButton(
+              onPressed: () {},
+              child: Text('UNAUTHORIZE',
+                  style: TextStyle(color: Colors.white, fontSize: 18)),
+              isOutline: true,
+              borderColor: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
+import 'package:qr_checker/models/scan.dart';
 import 'package:qr_checker/models/user.dart';
 import 'package:qr_checker/screens/signin.dart';
 import 'package:qr_checker/services/auth_service.dart';
 import 'package:qr_checker/services/passer_service.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
+import 'package:qr_checker/services/scan_service.dart';
 import 'package:qr_checker/utils/helper.dart';
 
 class Home extends StatefulWidget {
@@ -20,7 +23,9 @@ class _HomeState extends State<Home> {
 
   AuthService auth = AuthService();
 
-  PasserService passerService = PasserService();
+  final passersStream = PasserService().fetchPassers();
+
+  final scansStream = ScanService().fetchScans();
 
   @override
   void initState() {
@@ -80,10 +85,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 buildButtons(),
                 buildMenus(),
-                StreamBuilder<List<Passer>>(
-                    stream: passerService.fetchPassers(),
-                    initialData: [],
-                    builder: (ctx, snap) => buildList(snap.data)),
+                buildList(),
               ],
             ),
           ),
@@ -171,7 +173,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildList(List<Passer> passers) {
+  Widget buildList() {
     final borderRadius = BorderRadius.only(
         topLeft: Radius.circular(30), topRight: Radius.circular(30));
 
@@ -180,32 +182,66 @@ class _HomeState extends State<Home> {
     }
 
     return Expanded(
-      child: Container(
-          decoration:
-              BoxDecoration(borderRadius: borderRadius, color: Colors.white),
-          child: passers.length > 0
-              ? ListView.builder(
-                  itemCount: passers.length,
-                  itemBuilder: (context, i) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: ListTile(
-                          onTap: () {},
-                          leading: Icon(Icons.verified_user,
-                              color: Colors.green, size: 35),
-                          title: title(Helper.toElipse(input: passers[i].name)),
-                          subtitle: Text(passers[i].address),
-                          trailing: PrettyQr(
-                              // image: AssetImage('images/twitter.png'),
-                              typeNumber: 1,
-                              size: 50,
-                              data: passers[i].code,
-                              errorCorrectLevel: QrErrorCorrectLevel.M,
-                              roundEdges: true)),
-                    );
-                  })
-              : null),
-    );
+        child: Container(
+            decoration:
+                BoxDecoration(borderRadius: borderRadius, color: Colors.white),
+            child: isRecent
+                ? StreamBuilder<List<Scan>>(
+                    stream: scansStream,
+                    initialData: [],
+                    builder: (ctx, snap) => buildScans(snap.data, title))
+                : StreamBuilder<List<Passer>>(
+                    stream: passersStream,
+                    initialData: [],
+                    builder: (ctx, snap) => buildPassers(snap.data, title))));
+  }
+
+  ListView buildScans(List<Scan> scans, Text title(String text)) {
+    Widget icon(bool isAuthorized) => isAuthorized
+        ? Icon(Icons.verified_user, color: Colors.green, size: 35)
+        : Icon(FontAwesome.times, color: Colors.pinkAccent, size: 35);
+
+    return ListView.builder(
+        itemCount: scans.length,
+        itemBuilder: (context, i) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: ListTile(
+                onTap: () {},
+                leading: icon(scans[i].isAuthorized),
+                title: title(Helper.toElipse(input: scans[i].name)),
+                subtitle: Text(scans[i].address),
+                trailing: PrettyQr(
+                    // image: AssetImage('images/twitter.png'),
+                    typeNumber: 1,
+                    size: 50,
+                    data: scans[i].code,
+                    errorCorrectLevel: QrErrorCorrectLevel.M,
+                    roundEdges: true)),
+          );
+        });
+  }
+
+  ListView buildPassers(List<Passer> passers, Text title(String text)) {
+    return ListView.builder(
+        itemCount: passers.length,
+        itemBuilder: (context, i) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: ListTile(
+                onTap: () {},
+                leading: Icon(FontAwesome.user, color: Colors.teal, size: 35),
+                title: title(Helper.toElipse(input: passers[i].name)),
+                subtitle: Text(passers[i].address),
+                trailing: PrettyQr(
+                    // image: AssetImage('images/twitter.png'),
+                    typeNumber: 1,
+                    size: 50,
+                    data: passers[i].code,
+                    errorCorrectLevel: QrErrorCorrectLevel.M,
+                    roundEdges: true)),
+          );
+        });
   }
 
   Widget buildButtons() {
