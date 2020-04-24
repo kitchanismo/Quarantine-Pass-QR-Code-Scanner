@@ -4,5 +4,12 @@ class Passer {
   String name;
   String address;
   DateTime validity;
-  Passer({this.id, this.code, this.name, this.address, this.validity});
+  DateTime createdAt;
+  Passer(
+      {this.id,
+      this.code,
+      this.name,
+      this.address,
+      this.validity,
+      this.createdAt});
 }

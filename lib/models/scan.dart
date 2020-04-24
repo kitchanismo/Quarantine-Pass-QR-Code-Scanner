@@ -4,12 +4,5 @@ class Scan {
   String name;
   String address;
   DateTime scanAt;
-  bool isAuthorized;
-  Scan(
-      {this.id,
-      this.code,
-      this.name,
-      this.address,
-      this.scanAt,
-      this.isAuthorized});
+  Scan({this.id, this.code, this.name, this.address, this.scanAt});
 }

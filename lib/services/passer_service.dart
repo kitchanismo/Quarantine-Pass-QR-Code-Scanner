@@ -10,14 +10,16 @@ class PasserService {
         id: doc.documentID,
         code: doc['code'] ?? '',
         name: doc['name'] ?? '',
+        createdAt: doc['createdAt']?.toDate() ?? null,
         validity: doc['validity']?.toDate() ?? null,
         address: doc['address'] ?? '');
   }
 
-  Stream<QuerySnapshot> snaps() => collection.snapshots();
-
   Stream<List<Passer>> fetchPassers() {
-    return snaps().map((list) => list.documents.map(mapToPasser).toList());
+    return collection
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((list) => list.documents.map(mapToPasser).toList());
   }
 
   Future<bool> add(Passer passer) async {
@@ -26,7 +28,8 @@ class PasserService {
         'code': passer.code,
         'name': passer.name,
         'address': passer.address,
-        'validity': passer.validity
+        'validity': passer.validity,
+        'createdAt': DateTime.now()
       });
       return true;
     } catch (e) {

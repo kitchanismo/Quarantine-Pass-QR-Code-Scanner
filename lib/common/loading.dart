@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class Loading extends StatelessWidget {
+class Loading extends StatefulWidget {
   Loading({
     Key key,
     @required this.child,
@@ -9,15 +9,22 @@ class Loading extends StatelessWidget {
   });
 
   final bool isLoading;
+
   final Widget child;
+
+  @override
+  _LoadingState createState() => _LoadingState();
+}
+
+class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
-    if (!isLoading) {
-      return child;
+    if (!widget.isLoading) {
+      return widget.child;
     }
     return Stack(
       children: <Widget>[
-        child,
+        widget.child,
         Scaffold(
           backgroundColor: Color.fromRGBO(0, 0, 0, 0.7),
           body: Container(

@@ -197,10 +197,6 @@ class _HomeState extends State<Home> {
   }
 
   ListView buildScans(List<Scan> scans, Text title(String text)) {
-    Widget icon(bool isAuthorized) => isAuthorized
-        ? Icon(Icons.verified_user, color: Colors.green, size: 35)
-        : Icon(FontAwesome.times, color: Colors.pinkAccent, size: 35);
-
     return ListView.builder(
         itemCount: scans.length,
         itemBuilder: (context, i) {
@@ -208,7 +204,8 @@ class _HomeState extends State<Home> {
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: ListTile(
                 onTap: () {},
-                leading: icon(scans[i].isAuthorized),
+                leading:
+                    Icon(Icons.verified_user, color: Colors.green, size: 35),
                 title: title(Helper.toElipse(input: scans[i].name)),
                 subtitle: Text(scans[i].address),
                 trailing: PrettyQr(

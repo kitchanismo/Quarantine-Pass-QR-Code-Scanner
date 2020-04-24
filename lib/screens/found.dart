@@ -1,9 +1,13 @@
+import 'package:edge_alert/edge_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
+import 'package:qr_checker/common/loading.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
+import 'package:qr_checker/models/scan.dart';
+import 'package:qr_checker/services/scan_service.dart';
 import 'package:qr_checker/utils/helper.dart';
 
 class Found extends StatefulWidget {
@@ -14,36 +18,40 @@ class Found extends StatefulWidget {
 }
 
 class _FoundState extends State<Found> {
-  bool isIDSwitched = false;
-  bool isMaskSwitched = false;
-
+  bool isIDSwitched = true;
+  bool isMaskSwitched = true;
+  ScanService scanService = ScanService();
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     final Passer passer = ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.teal, //change your color here
-          ),
+    return Loading(
+      isLoading: isLoading,
+      child: Scaffold(
           backgroundColor: Colors.white,
-          title:
-              Text('Information Details', style: TextStyle(color: Colors.teal)),
-          elevation: 0,
-        ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              height: 150,
-              margin: EdgeInsets.only(bottom: 10),
-              child: Row(children: <Widget>[
-                buildQRCode(context: context, code: passer.code),
-                buildToggles(passer.code),
-              ]),
+          appBar: AppBar(
+            iconTheme: IconThemeData(
+              color: Colors.teal, //change your color here
             ),
-            buildDetails(passer),
-          ],
-        ));
+            backgroundColor: Colors.white,
+            title: Text('Information Details',
+                style: TextStyle(color: Colors.teal)),
+            elevation: 0,
+          ),
+          body: Column(
+            children: <Widget>[
+              Container(
+                height: 150,
+                margin: EdgeInsets.only(bottom: 10),
+                child: Row(children: <Widget>[
+                  buildQRCode(context: context, code: passer.code),
+                  buildToggles(passer.code),
+                ]),
+              ),
+              buildDetails(passer),
+            ],
+          )),
+    );
   }
 
   Widget buildDetails(Passer passer) {
@@ -93,7 +101,7 @@ class _FoundState extends State<Found> {
                 label: 'Validity',
                 text: Helper.dateOnly(passer.validity),
                 child: renderIcon()),
-            buildButtons(passer.validity)
+            buildButtons(passer)
           ],
         ),
         decoration: BoxDecoration(
@@ -104,30 +112,40 @@ class _FoundState extends State<Found> {
     );
   }
 
-  Widget buildButtons(DateTime validity) {
+  Widget buildButtons(Passer passer) {
     var isPassed =
-        isMaskSwitched && isIDSwitched && Helper.isPassValid(validity);
+        isMaskSwitched && isIDSwitched && Helper.isPassValid(passer.validity);
+
+    void onSave() async {
+      setState(() {
+        isLoading = true;
+      });
+      Scan scan =
+          Scan(name: passer.name, code: passer.code, address: passer.address);
+      final res = await scanService.add(scan);
+      if (res) {
+        EdgeAlert.show(
+          context,
+          title: 'QR SCANNER',
+          description: 'Successfully Saved!',
+          backgroundColor: Colors.green,
+          gravity: EdgeAlert.TOP,
+          duration: EdgeAlert.LENGTH_SHORT,
+        );
+        Navigator.pushNamed(context, '/');
+        return;
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
       child: Row(
         children: <Widget>[
           Expanded(
             child: MyButton(
-                onPressed: isPassed ? () {} : null,
-                child: Text('PASS',
-                    style: TextStyle(color: Colors.white, fontSize: 18))),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: MyButton(
-              onPressed: () {},
-              child: Text('UNAUTHORIZE',
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
-              isOutline: true,
-              borderColor: Colors.white,
-            ),
+                onPressed: isPassed ? onSave : null,
+                child: Text(isPassed ? 'PASS' : 'UNAUTHORIZED',
+                    style: TextStyle(color: Colors.white, fontSize: 20))),
           ),
         ],
       ),

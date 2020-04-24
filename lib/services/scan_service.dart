@@ -9,16 +9,30 @@ class ScanService {
         id: doc.documentID,
         code: doc['code'] ?? '',
         name: doc['name'] ?? '',
-        isAuthorized: doc['isAuthorized'] ?? '',
         scanAt: doc['scanAt']?.toDate() ?? null,
         address: doc['address'] ?? '');
   }
 
-  Stream<QuerySnapshot> snaps() => collection.snapshots();
-
   Stream<List<Scan>> fetchScans() {
-    return snaps().map((list) => list.documents.map(mapToScan).toList());
+    return collection
+        .orderBy('scanAt', descending: true)
+        .limit(10)
+        .snapshots()
+        .map((list) => list.documents.map(mapToScan).toList());
   }
 
-
+  Future<bool> add(Scan scan) async {
+    try {
+      await collection.document().setData({
+        'code': scan.code,
+        'name': scan.name,
+        'address': scan.address,
+        'scanAt': DateTime.now()
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 }

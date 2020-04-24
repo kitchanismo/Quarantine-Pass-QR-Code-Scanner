@@ -125,7 +125,7 @@ class _SignInState extends State<SignIn> {
                           child: Padding(
                         padding: const EdgeInsets.fromLTRB(40, 0, 40, 30),
                         child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Container(
@@ -210,7 +210,7 @@ class _SignInState extends State<SignIn> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(0, 20, 15, 15),
+              padding: EdgeInsets.fromLTRB(0, 20, 15, 0),
               width: MediaQuery.of(context).size.width,
               height: 350,
               child: FlareActor("assets/ted.flr",

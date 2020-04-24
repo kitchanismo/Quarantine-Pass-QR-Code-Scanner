@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/services/passer_service.dart';
+
 import 'package:twitter_qr_scanner/twitter_qr_scanner.dart';
 import 'package:twitter_qr_scanner/QrScannerOverlayShape.dart';
 import 'package:qr_checker/common/loading.dart';
@@ -48,7 +49,7 @@ class _ScannerState extends State<Scanner> {
         description: 'QR Code found!',
         backgroundColor: Colors.green,
         gravity: EdgeAlert.TOP,
-        duration: EdgeAlert.LENGTH_LONG,
+        duration: EdgeAlert.LENGTH_SHORT,
       );
       Navigator.pushReplacementNamed(context, '/found', arguments: passer);
       return;
