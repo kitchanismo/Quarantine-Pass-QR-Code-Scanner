@@ -80,12 +80,12 @@ class _HomeState extends State<Home> {
             elevation: 0,
           ),
           body: Container(
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 10),
             child: Column(
               children: <Widget>[
                 buildButtons(),
                 buildMenus(),
-                buildList(),
+                Expanded(flex: 5, child: buildList()),
               ],
             ),
           ),
@@ -108,7 +108,7 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text(user == null ? '' : user.email),
+            child: Text(user?.email),
             decoration: BoxDecoration(
               color: Colors.teal,
             ),
@@ -124,7 +124,7 @@ class _HomeState extends State<Home> {
             title: Text('Sign out'),
             onTap: () async {
               await auth.signOut();
-              // Navigator.pushNamed(context, '/signin');
+              Navigator.pushNamed(context, '/signin');
               // Update the state of the app.
               // ...
             },
@@ -153,7 +153,7 @@ class _HomeState extends State<Home> {
                 });
               },
               child: Text(
-                'Recent Scanned',
+                'Recent',
                 style: style(isRecent),
               )),
         ),
@@ -181,19 +181,18 @@ class _HomeState extends State<Home> {
       return Text(text, style: TextStyle(fontSize: 25, color: Colors.teal));
     }
 
-    return Expanded(
-        child: Container(
-            decoration:
-                BoxDecoration(borderRadius: borderRadius, color: Colors.white),
-            child: isRecent
-                ? StreamBuilder<List<Scan>>(
-                    stream: scansStream,
-                    initialData: [],
-                    builder: (ctx, snap) => buildScans(snap.data, title))
-                : StreamBuilder<List<Passer>>(
-                    stream: passersStream,
-                    initialData: [],
-                    builder: (ctx, snap) => buildPassers(snap.data, title))));
+    return Container(
+        decoration:
+            BoxDecoration(borderRadius: borderRadius, color: Colors.white),
+        child: isRecent
+            ? StreamBuilder<List<Scan>>(
+                stream: scansStream,
+                initialData: [],
+                builder: (ctx, snap) => buildScans(snap.data, title))
+            : StreamBuilder<List<Passer>>(
+                stream: passersStream,
+                initialData: [],
+                builder: (ctx, snap) => buildPassers(snap.data, title)));
   }
 
   ListView buildScans(List<Scan> scans, Text title(String text)) {
@@ -201,7 +200,7 @@ class _HomeState extends State<Home> {
         itemCount: scans.length,
         itemBuilder: (context, i) {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 0),
             child: ListTile(
                 onTap: () {},
                 leading:
@@ -243,14 +242,14 @@ class _HomeState extends State<Home> {
 
   Widget buildButtons() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(50, 30, 50, 15),
+      padding: const EdgeInsets.fromLTRB(50, 20, 50, 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
             child: MyButton(
               child: Text('SCAN',
-                  style: TextStyle(color: Colors.white, fontSize: 30)),
+                  style: TextStyle(color: Colors.white, fontSize: 20)),
               onPressed: () {
                 Navigator.pushNamed(context, '/scanner');
               },

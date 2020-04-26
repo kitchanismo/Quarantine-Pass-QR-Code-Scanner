@@ -31,9 +31,9 @@ class _LoadingState extends State<Loading> {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SpinKitChasingDots(
-                color: Colors.pinkAccent,
-                size: 70.0,
+              SpinKitDoubleBounce(
+                color: Colors.white,
+                size: 100.0,
               ),
               // SizedBox(
               //   height: 20,

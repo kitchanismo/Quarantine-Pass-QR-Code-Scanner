@@ -89,20 +89,27 @@ class _FoundState extends State<Found> {
       );
     }
 
+    // final detailsHeight = MediaQuery.of(context).size.height;
+
     return Expanded(
       child: Container(
-        padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            detail(label: 'Fullname', text: passer.name),
-            detail(label: 'Address', text: passer.address),
-            detail(
-                label: 'Validity',
-                text: Helper.dateOnly(passer.validity),
-                child: renderIcon()),
-            buildButtons(passer)
-          ],
+        padding: EdgeInsets.fromLTRB(30, 0, 30, 20),
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.only(top: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                detail(label: 'Fullname', text: passer.name),
+                detail(label: 'Address', text: passer.address),
+                detail(
+                    label: 'Validity',
+                    text: Helper.dateOnly(passer.validity),
+                    child: renderIcon()),
+                buildButtons(passer)
+              ],
+            ),
+          ),
         ),
         decoration: BoxDecoration(
             color: Colors.teal,
@@ -155,7 +162,7 @@ class _FoundState extends State<Found> {
   Widget buildToggles(String code) {
     return Expanded(
       child: Container(
-          // padding: EdgeInsets.fromLTRB(30, 30, 30, 20),
+          //padding: EdgeInsets.fromLTRB(30, 30, 30, 20),
           decoration: BoxDecoration(
               //     borderRadius: BorderRadius.all(Radius.circular(20)),
               color: Colors.white),
@@ -184,7 +191,7 @@ class _FoundState extends State<Found> {
 
   Widget buildSwitch({bool isSwitched, String label, Function onChanged}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Text(
           label,

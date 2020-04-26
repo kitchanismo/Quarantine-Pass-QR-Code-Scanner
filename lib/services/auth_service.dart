@@ -26,7 +26,6 @@ class AuthService {
 
   Future<Tuple2<String, bool>> signIn(User user) async {
     try {
-      //  return Tuple2<String, bool>('Logged In!', true);
       await _auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
 
@@ -36,6 +35,9 @@ class AuthService {
       if (e.code == 'ERROR_WRONG_PASSWORD' ||
           e.code == 'ERROR_USER_NOT_FOUND') {
         return Tuple2<String, bool>('Invalid Email or Password!', false);
+      }
+      if (e.code == 'ERROR_INVALID_EMAIL') {
+        return Tuple2<String, bool>('Email is in invalid format!', false);
       }
       return Tuple2<String, bool>('Network Error', false);
     }

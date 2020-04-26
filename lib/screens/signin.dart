@@ -137,17 +137,17 @@ class _SignInState extends State<SignIn> {
                                 child: Wrap(
                                   alignment: WrapAlignment.center,
                                   children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
-                                      child: Text('Welcome',
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              color: Colors.teal)),
-                                    ),
-                                    Divider(
-                                      thickness: 2,
-                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.fromLTRB(
+                                    //       0, 10, 0, 0),
+                                    //   child: Text('Welcome',
+                                    //       style: TextStyle(
+                                    //           fontSize: 30,
+                                    //           color: Colors.teal)),
+                                    // ),
+                                    // Divider(
+                                    //   thickness: 2,
+                                    // ),
                                     TrackingTextInput(
                                         // initialValue: user.email,
                                         label: "Email",
