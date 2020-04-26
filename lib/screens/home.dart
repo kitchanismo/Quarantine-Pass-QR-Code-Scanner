@@ -37,16 +37,17 @@ class _HomeState extends State<Home> {
     final user = Provider.of<User>(context);
 
     if (user == null) {
+      //Navigator.pushNamed(context, '/signin');
       return SignIn();
     }
     return Stack(
       children: <Widget>[
-        // Image.asset(
-        //   'assets/covid.jpg',
-        //   height: MediaQuery.of(context).size.height - 500,
-        //   width: MediaQuery.of(context).size.width,
-        //   fit: BoxFit.cover,
-        // ),
+        Image.asset(
+          'assets/people.jpg',
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
+        ),
         Scaffold(
           drawer: myDrawer(user),
           backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),

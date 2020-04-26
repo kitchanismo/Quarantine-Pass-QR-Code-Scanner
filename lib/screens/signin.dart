@@ -8,6 +8,7 @@ import 'package:qr_checker/services/auth_service.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:qr_checker/utils/teddy_controller.dart';
 import 'package:qr_checker/common/tracking_text_input.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -24,7 +25,6 @@ class _SignInState extends State<SignIn> {
 
   final auth = AuthService();
   User user = User(email: '', password: '');
-  bool isLoading = false;
 
   bool isInputValid() {
     if (user.email == '' || user.password == '') {
@@ -65,9 +65,7 @@ class _SignInState extends State<SignIn> {
       return;
     }
 
-    setState(() {
-      isLoading = true;
-    });
+    EasyLoading.show(status: 'signing in...');
 
     final result = await auth.signIn(user);
 
@@ -83,10 +81,8 @@ class _SignInState extends State<SignIn> {
         duration: EdgeAlert.LENGTH_VERY_LONG,
       );
       _teddyController.fail();
-      await Future.delayed(Duration(seconds: 2));
-      setState(() {
-        isLoading = false;
-      });
+      EasyLoading.dismiss();
+      //await Future.delayed(Duration(seconds: 2));
       return;
     }
     EdgeAlert.show(
@@ -98,107 +94,92 @@ class _SignInState extends State<SignIn> {
       gravity: EdgeAlert.TOP,
       duration: EdgeAlert.LENGTH_LONG,
     );
-    // _teddyController.success();
+    EasyLoading.dismiss();
+    _teddyController.success();
 
-    // Navigator.pushNamed(context, '/');
+    Navigator.pushNamed(context, '/');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Loading(
-      isLoading: isLoading,
-      child: Stack(
-        children: <Widget>[
-          // Image.asset(
-          //   'assets/covid.jpg',
-          //   height: MediaQuery.of(context).size.height,
-          //   width: MediaQuery.of(context).size.width,
-          //   fit: BoxFit.cover,
-          // ),
-          Scaffold(
-              backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
-              body: Container(
-                child: ListView(children: [
-                  buildBanner(
-                      context: context,
-                      child: Form(
-                          child: Padding(
-                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                                decoration: BoxDecoration(
-                                    color: Color.fromRGBO(255, 255, 255, .9),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
-                                child: Wrap(
-                                  alignment: WrapAlignment.center,
-                                  children: <Widget>[
-                                    // Padding(
-                                    //   padding: const EdgeInsets.fromLTRB(
-                                    //       0, 10, 0, 0),
-                                    //   child: Text('Welcome',
-                                    //       style: TextStyle(
-                                    //           fontSize: 30,
-                                    //           color: Colors.teal)),
-                                    // ),
-                                    // Divider(
-                                    //   thickness: 2,
-                                    // ),
-                                    TrackingTextInput(
-                                        // initialValue: user.email,
-                                        label: "Email",
-                                        onTextChanged: (value) {
-                                          setState(() {
-                                            user.email = value;
-                                          });
-                                        },
-                                        onCaretMoved: (Offset caret) {
-                                          _teddyController.lookAt(caret);
-                                        }),
-                                    TrackingTextInput(
-                                        // initialValue: user.password,
-                                        label: "Password",
-                                        isObscured: true,
-                                        onCaretMoved: (Offset caret) {
-                                          _teddyController
-                                              .coverEyes(caret != null);
-                                          _teddyController.lookAt(null);
-                                        },
-                                        onTextChanged: (String value) {
-                                          _teddyController.setPassword(value);
-                                          setState(() {
-                                            user.password = value;
-                                          });
-                                        }),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 20),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: <Widget>[
-                                          MyButton(
-                                            onPressed: onSubmit,
-                                            child: Text('SIGN IN',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20)),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
+    return Stack(
+      children: <Widget>[
+        Image.asset(
+          'assets/people.jpg',
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
+        ),
+        Scaffold(
+            backgroundColor: Color.fromRGBO(0, 128, 128, 0.9),
+            body: Container(
+              child: ListView(children: [
+                buildBanner(
+                    context: context,
+                    child: Form(
+                        child: Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                              decoration: BoxDecoration(
+                                  color: Color.fromRGBO(255, 255, 255, .9),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                children: <Widget>[
+                                  TrackingTextInput(
+                                      label: "Email",
+                                      onTextChanged: (value) {
+                                        setState(() {
+                                          user.email = value;
+                                        });
+                                      },
+                                      onCaretMoved: (Offset caret) {
+                                        _teddyController.lookAt(caret);
+                                      }),
+                                  TrackingTextInput(
+                                      label: "Password",
+                                      isObscured: true,
+                                      onCaretMoved: (Offset caret) {
+                                        _teddyController
+                                            .coverEyes(caret != null);
+                                        _teddyController.lookAt(null);
+                                      },
+                                      onTextChanged: (String value) {
+                                        _teddyController.setPassword(value);
+                                        setState(() {
+                                          user.password = value;
+                                        });
+                                      }),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: <Widget>[
+                                        MyButton(
+                                          onPressed: onSubmit,
+                                          child: Text('SIGN IN',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20)),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
-                            ]),
-                      ))),
-                ]),
-              )),
-        ],
-      ),
+                            ),
+                          ]),
+                    ))),
+              ]),
+            )),
+      ],
     );
   }
 

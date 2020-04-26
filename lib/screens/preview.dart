@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:qr_checker/common/loading.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/passer.dart';
@@ -15,16 +16,12 @@ class Preview extends StatefulWidget {
 
 class _PreviewState extends State<Preview> {
   final passerService = PasserService();
-  bool isLoading = false;
 
   Future onSave(Passer passer) async {
-    setState(() {
-      isLoading = true;
-    });
+    EasyLoading.show(status: 'saving...');
+
     final res = await passerService.add(passer);
-    setState(() {
-      isLoading = false;
-    });
+    EasyLoading.dismiss();
     if (res) {
       EdgeAlert.show(
         context,
@@ -51,21 +48,18 @@ class _PreviewState extends State<Preview> {
   Widget build(BuildContext context) {
     Passer passer = ModalRoute.of(context).settings.arguments;
 
-    return Loading(
-      isLoading: isLoading,
-      child: Scaffold(
-          backgroundColor: Colors.teal,
-          appBar: AppBar(elevation: 0, title: Text('Preview')),
-          body: Container(
-              child: ListView(
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                buildQRCode(context: context, code: passer.code),
-              ]),
-              buildCard(passer, context),
-            ],
-          ))),
-    );
+    return Scaffold(
+        backgroundColor: Colors.teal,
+        appBar: AppBar(elevation: 0, title: Text('Preview')),
+        body: Container(
+            child: ListView(
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              buildQRCode(context: context, code: passer.code),
+            ]),
+            buildCard(passer, context),
+          ],
+        )));
   }
 
   Widget buildCard(Passer passer, BuildContext context) {

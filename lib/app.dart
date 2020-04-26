@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:qr_checker/screens/add.dart';
 import 'package:qr_checker/screens/found.dart';
@@ -17,19 +18,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.teal, fontFamily: 'Baloo'),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => Home(),
-        '/preview': (context) => Preview(),
-        '/add': (context) => AddForm(),
-        '/signin': (context) => SignIn(),
-        '/found': (context) => Found(),
-        '/scanner': (context) => Scanner(title: 'Scanner'),
-      },
+    return FlutterEasyLoading(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(primarySwatch: Colors.teal, fontFamily: 'Baloo'),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => Home(),
+          '/preview': (context) => Preview(),
+          '/add': (context) => AddForm(),
+          '/signin': (context) => SignIn(),
+          '/found': (context) => Found(),
+          '/scanner': (context) => Scanner(title: 'Scanner'),
+        },
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:edge_alert/edge_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
@@ -21,36 +22,43 @@ class _FoundState extends State<Found> {
   bool isIDSwitched = true;
   bool isMaskSwitched = true;
   ScanService scanService = ScanService();
-  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final Passer passer = ModalRoute.of(context).settings.arguments;
-    return Loading(
-      isLoading: isLoading,
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            iconTheme: IconThemeData(
-              color: Colors.teal, //change your color here
-            ),
-            backgroundColor: Colors.white,
-            title: Text('Information Details',
-                style: TextStyle(color: Colors.teal)),
-            elevation: 0,
-          ),
-          body: Column(
-            children: <Widget>[
-              Container(
-                height: 150,
-                margin: EdgeInsets.only(bottom: 10),
-                child: Row(children: <Widget>[
-                  buildQRCode(context: context, code: passer.code),
-                  buildToggles(passer.code),
-                ]),
+    return Stack(
+      children: <Widget>[
+        Image.asset(
+          'assets/people.jpg',
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
+        ),
+        Scaffold(
+            backgroundColor: Colors.white.withOpacity(0.9),
+            appBar: AppBar(
+              iconTheme: IconThemeData(
+                color: Colors.teal, //change your color here
               ),
-              buildDetails(passer),
-            ],
-          )),
+              backgroundColor: Colors.transparent,
+              title: Text('Information Details',
+                  style: TextStyle(color: Colors.teal)),
+              elevation: 0,
+            ),
+            body: Column(
+              children: <Widget>[
+                Container(
+                  height: 150,
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: Row(children: <Widget>[
+                    buildQRCode(context: context, code: passer.code),
+                    buildToggles(passer.code),
+                  ]),
+                ),
+                buildDetails(passer),
+              ],
+            )),
+      ],
     );
   }
 
@@ -124,12 +132,11 @@ class _FoundState extends State<Found> {
         isMaskSwitched && isIDSwitched && Helper.isPassValid(passer.validity);
 
     void onSave() async {
-      setState(() {
-        isLoading = true;
-      });
       Scan scan =
           Scan(name: passer.name, code: passer.code, address: passer.address);
+      EasyLoading.show(status: 'saving...');
       final res = await scanService.add(scan);
+      EasyLoading.dismiss();
       if (res) {
         EdgeAlert.show(
           context,
@@ -139,6 +146,7 @@ class _FoundState extends State<Found> {
           gravity: EdgeAlert.TOP,
           duration: EdgeAlert.LENGTH_SHORT,
         );
+
         Navigator.pushNamed(context, '/');
         return;
       }
@@ -165,7 +173,7 @@ class _FoundState extends State<Found> {
           //padding: EdgeInsets.fromLTRB(30, 30, 30, 20),
           decoration: BoxDecoration(
               //     borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: Colors.white),
+              color: Colors.transparent),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -193,10 +201,9 @@ class _FoundState extends State<Found> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(
-          label,
-          style: TextStyle(color: Colors.teal, fontSize: 20),
-        ),
+        Text(label,
+            style: TextStyle(
+                color: Colors.teal, fontSize: 20, fontWeight: FontWeight.bold)),
         Switch(
           value: isSwitched,
           onChanged: onChanged,

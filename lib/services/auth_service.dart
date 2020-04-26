@@ -39,6 +39,11 @@ class AuthService {
       if (e.code == 'ERROR_INVALID_EMAIL') {
         return Tuple2<String, bool>('Email is in invalid format!', false);
       }
+      if (e.code == 'ERROR_TOO_MANY_REQUESTS') {
+        return Tuple2<String, bool>(
+            'Too many unsuccessful login attempts.!', false);
+      }
+
       return Tuple2<String, bool>('Network Error', false);
     }
   }

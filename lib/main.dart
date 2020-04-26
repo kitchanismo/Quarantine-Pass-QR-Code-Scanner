@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_checker/app.dart';
 import 'package:qr_checker/models/passer.dart';
@@ -11,7 +12,7 @@ void main() {
   final user = AuthService().user;
 
   //print(user);
-  return runApp(MultiProvider(
+  runApp(MultiProvider(
     providers: [
       StreamProvider<User>(
         create: (_) => user,
@@ -30,4 +31,21 @@ void main() {
     ],
     child: MyApp(),
   ));
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..loadingStyle = EasyLoadingStyle.custom
+    ..backgroundColor = Colors.red
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.ripple
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 60.0
+    ..radius = 10.0
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..contentPadding = EdgeInsets.all(40)
+    ..userInteractions = false;
 }
