@@ -20,26 +20,25 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isRecent = true;
-
-  AuthService auth = AuthService();
-
-  final passersStream = PasserService().fetchPassers();
-
-  final scansStream = ScanService().fetchScans();
+  AuthService auth;
+  Stream<List<Passer>> passersStream;
+  Stream<List<Scan>> scansStream;
 
   @override
   void initState() {
+    auth = AuthService();
+    passersStream = PasserService().fetchPassers();
+    scansStream = ScanService().fetchScans();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    User user = Provider.of<User>(context);
 
-    if (user == null) {
-      //Navigator.pushNamed(context, '/signin');
-      return SignIn();
-    }
+    // if (user == null) {
+    //   return SignIn();
+    // }
     return Stack(
       children: <Widget>[
         Image.asset(
@@ -109,7 +108,7 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text(user?.email),
+            child: Text(user == null ? '' : user.email),
             decoration: BoxDecoration(
               color: Colors.teal,
             ),

@@ -16,14 +16,16 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   TeddyController _teddyController;
+  AuthService auth;
+  User user;
+
   @override
   initState() {
+    auth = AuthService();
+    user = User(email: '', password: '');
     _teddyController = TeddyController();
     super.initState();
   }
-
-  final auth = AuthService();
-  User user = User(email: '', password: '');
 
   bool isInputValid() {
     if (user.email == '' || user.password == '') {

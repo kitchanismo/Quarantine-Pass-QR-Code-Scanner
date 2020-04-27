@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
-import 'package:qr_checker/screens/add.dart';
-import 'package:qr_checker/screens/found.dart';
-import 'package:qr_checker/screens/home.dart';
-import 'package:qr_checker/screens/preview.dart';
-import 'package:qr_checker/screens/scanner.dart';
-import 'package:qr_checker/screens/signin.dart';
+import 'package:qr_checker/routes.dart';
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
@@ -21,17 +15,10 @@ class _MyAppState extends State<MyApp> {
     return FlutterEasyLoading(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'QR SCANNER',
         theme: ThemeData(primarySwatch: Colors.teal, fontFamily: 'Baloo'),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => Home(),
-          '/preview': (context) => Preview(),
-          '/add': (context) => AddForm(),
-          '/signin': (context) => SignIn(),
-          '/found': (context) => Found(),
-          '/scanner': (context) => Scanner(title: 'Scanner'),
-        },
+        initialRoute: initialRoute,
+        routes: routes,
       ),
     );
   }
