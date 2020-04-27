@@ -33,6 +33,14 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void dispose() {
+    auth = null;
+    passersStream = null;
+    scansStream = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
 

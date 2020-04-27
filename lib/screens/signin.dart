@@ -27,6 +27,12 @@ class _SignInState extends State<SignIn> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    EasyLoading.dismiss();
+    super.dispose();
+  }
+
   bool isInputValid() {
     if (user.email == '' || user.password == '') {
       EdgeAlert.show(
@@ -70,7 +76,7 @@ class _SignInState extends State<SignIn> {
 
     final result = await auth.signIn(user);
 
-    print(result.item1);
+    EasyLoading.dismiss();
     if (result.item2 == false) {
       EdgeAlert.show(
         context,
@@ -82,7 +88,7 @@ class _SignInState extends State<SignIn> {
         duration: EdgeAlert.LENGTH_VERY_LONG,
       );
       _teddyController.fail();
-      EasyLoading.dismiss();
+
       //await Future.delayed(Duration(seconds: 2));
       return;
     }
@@ -95,10 +101,8 @@ class _SignInState extends State<SignIn> {
       gravity: EdgeAlert.TOP,
       duration: EdgeAlert.LENGTH_LONG,
     );
-    EasyLoading.dismiss();
-    _teddyController.success();
 
-    Navigator.pushNamed(context, '/');
+    _teddyController.success();
   }
 
   @override

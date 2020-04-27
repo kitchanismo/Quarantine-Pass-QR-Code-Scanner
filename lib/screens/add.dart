@@ -88,6 +88,9 @@ class _AddFormState extends State<AddForm> {
                     Text('VALIDITY',
                         style:
                             TextStyle(color: Colors.grey[700], fontSize: 20)),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Text(Helper.dateOnly(passer.validity),
                         style: TextStyle(color: Colors.teal, fontSize: 25))
                   ]),

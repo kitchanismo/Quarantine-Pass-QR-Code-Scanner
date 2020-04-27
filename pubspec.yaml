@@ -64,11 +64,11 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Baloo
+    - family: RobotoSlab
       fonts:
-        - asset: fonts/BalooBhaina2-Regular.ttf
-        - asset: fonts/BalooBhaina2-Medium.ttf
-        - asset: fonts/BalooBhaina2-Bold.ttf
+        - asset: fonts/RobotoSlab-Regular.ttf
+        - asset: fonts/RobotoSlab-Medium.ttf
+        - asset: fonts/RobotoSlab-Bold.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

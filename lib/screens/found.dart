@@ -73,7 +73,7 @@ class _FoundState extends State<Found> {
             ),
             child != null
                 ? Padding(
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 0),
                     child: child,
                   )
                 : Text('')
@@ -81,6 +81,9 @@ class _FoundState extends State<Found> {
         ),
         Text(text,
             maxLines: 2, style: TextStyle(color: Colors.white, fontSize: 25)),
+        SizedBox(
+          height: 20,
+        ),
       ]);
     }
 

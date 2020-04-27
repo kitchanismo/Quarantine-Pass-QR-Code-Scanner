@@ -16,7 +16,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'QR SCANNER',
-        theme: ThemeData(primarySwatch: Colors.teal, fontFamily: 'Baloo'),
+        theme: ThemeData(primarySwatch: Colors.teal, fontFamily: 'RobotoSlab'),
         initialRoute: initialRoute,
         routes: routes,
       ),

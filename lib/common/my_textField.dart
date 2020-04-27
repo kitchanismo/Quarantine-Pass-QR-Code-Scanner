@@ -40,7 +40,7 @@ class _MyTextFieldState extends State<MyTextField> {
             cursorColor: widget.textColor,
             style: TextStyle(fontSize: 25, color: widget.textColor),
             onChanged: widget.onChanged),
-        SizedBox(height: 10),
+        SizedBox(height: 15),
       ],
     );
   }
