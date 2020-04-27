@@ -218,7 +218,7 @@ class _FoundState extends State<Found> {
       padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
       decoration: BoxDecoration(
           //     borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Colors.white),
+          color: Colors.transparent),
       child: PrettyQr(
           typeNumber: 1,
           data: code,

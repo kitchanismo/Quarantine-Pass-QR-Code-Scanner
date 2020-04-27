@@ -1,12 +1,11 @@
 import 'package:edge_alert/edge_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:qr_checker/common/loading.dart';
 import 'package:qr_checker/common/my_button.dart';
 import 'package:qr_checker/models/user.dart';
 import 'package:qr_checker/services/auth_service.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:qr_checker/utils/teddy_controller.dart';
+import 'package:qr_checker/custom/teddy_controller.dart';
 import 'package:qr_checker/common/tracking_text_input.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 

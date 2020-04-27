@@ -4,7 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:qr_checker/models/passer.dart';
 import 'package:qr_checker/services/passer_service.dart';
-import 'package:qr_checker/utils/QRCustom.dart';
+import 'package:qr_checker/custom/qr_custom.dart';
 
 ///import 'package:twitter_qr_scanner/twitter_qr_scanner.dart';
 import 'package:twitter_qr_scanner/QrScannerOverlayShape.dart';
